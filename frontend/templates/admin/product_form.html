@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}{% if product %}Edit{% else %}Add{% endif %} Product{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem 0; max-width: 800px; margin: 0 auto;">
+    <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 2rem;">
+        {% if product %}Edit Product{% else %}Add New Product{% endif %}
+    </h1>
+
+    <form method="POST" enctype="multipart/form-data" style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <!-- Basic Information -->
+        <h2 style="margin-bottom: 1.5rem;">Basic Information</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem;">Product Name *</label>
+                <input type="text" name="name" value="{{ product.name if product else '' }}" required
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem;">Brand *</label>
+                <input type="text" name="brand" value="{{ product.brand if product else '' }}" required
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem;">Category *</label>
+                <select name="category" required style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                    <option value="">Select Category</option>
+                    <option value="watches" {% if product and product.category == 'watches' %}selected{% endif %}>Watches</option>
+                    <option value="gold" {% if product and product.category == 'gold' %}selected{% endif %}>Gold</option>
+                    <option value="diamond" {% if product and product.category == 'diamond' %}selected{% endif %}>Diamond</option>
+                    <option value="other" {% if product and product.category == 'other' %}selected{% endif %}>Other</option>
+                </select>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem;">Stock Quantity *</label>
+                <input type="number" name="stock" value="{{ product.stock if product else 0 }}" min="0" required
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+        </div>
+
+        <!-- Pricing -->
+        <h2 style="margin: 2rem 0 1.5rem;">Pricing</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem;">Price (KES) *</label>
+                <input type="number" name="price" value="{{ product.price if product else 0 }}" min="0" step="0.01" required
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem;">Discount (%)</label>
+                <input type="number" name="discount" value="{{ product.discount if product else 0 }}" min="0" max="100"
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem;">Final Price</label>
+                <input type="text" id="final-price" readonly
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9;">
+            </div>
+        </div>
+
+        <!-- Description -->
+        <h2 style="margin: 2rem 0 1.5rem;">Description</h2>
+        
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem;">Description *</label>
+            <textarea name="description" rows="5" required
+                      style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">{{ product.description if product else '' }}</textarea>
+        </div>
+
+        <!-- Images -->
+        <h2 style="margin: 2rem 0 1.5rem;">Product Image</h2>
+        
+        <div style="margin-bottom: 1rem;">
+            <label style="display: block; margin-bottom: 0.5rem;">Upload Image</label>
+            <input type="file" name="image" accept="image/*"
+                   style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            {% if product and product.image_url %}
+            <div style="margin-top: 1rem;">
+                <img src="{{ product.image_url }}" alt="Current image" style="max-width: 200px; border-radius: 4px;">
+                <p style="font-size: 0.9rem; color: #666;">Current image</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Options -->
+        <h2 style="margin: 2rem 0 1.5rem;">Options</h2>
+        
+        <div style="margin-bottom: 1rem;">
+            <label>
+                <input type="checkbox" name="featured" {% if product and product.featured %}checked{% endif %}>
+                Feature this product on homepage
+            </label>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1; padding: 1rem;">
+                {% if product %}Update{% else %}Create{% endif %} Product
+            </button>
+            <a href="/admin/products" class="btn btn-secondary" style="flex: 1; padding: 1rem; text-align: center;">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Calculate final price when price or discount changes
+document.querySelector('input[name="price"]').addEventListener('input', updateFinalPrice);
+document.querySelector('input[name="discount"]').addEventListener('input', updateFinalPrice);
+
+function updateFinalPrice() {
+    const price = parseFloat(document.querySelector('input[name="price"]').value) || 0;
+    const discount = parseFloat(document.querySelector('input[name="discount"]').value) || 0;
+    const finalPrice = price * (1 - discount / 100);
+    document.getElementById('final-price').value = 'KES ' + finalPrice.toFixed(0);
+}
+
+// Initial calculation
+updateFinalPrice();
+</script>
+{% endblock %}

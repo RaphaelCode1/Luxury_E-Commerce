@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Successful{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0; max-width: 600px; margin: 0 auto;">
+    <div style="background: #fff; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 20px rgba(0,0,0,0.1); text-align: center;">
+        <!-- Success Icon -->
+        <div style="width: 80px; height: 80px; background: #4CAF50; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+            <span style="color: white; font-size: 3rem;">✓</span>
+        </div>
+
+        <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 1rem; color: #4CAF50;">
+            Payment Successful!
+        </h1>
+        
+        <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">
+            Thank you for your purchase. Your order has been confirmed.
+        </p>
+
+        <!-- Order Details -->
+        <div style="background: #f9f9f9; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; text-align: left;">
+            <h3 style="margin-bottom: 1rem;">Order Details</h3>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="color: #666;">Order Number:</span>
+                <span id="order-number" style="font-weight: bold;">ORD-2026-0001</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="color: #666;">M-Pesa Receipt:</span>
+                <span id="receipt-number" style="font-weight: bold; color: #d4af37;"></span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="color: #666;">Amount Paid:</span>
+                <span id="order-amount" style="font-weight: bold;">KES 0</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #666;">Payment Method:</span>
+                <span>M-Pesa</span>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div style="margin-bottom: 2rem;">
+            <p style="color: #666;">A confirmation email has been sent to your email address.</p>
+            <p style="color: #666;">You will receive your order within 3-5 business days.</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <button onclick="window.location.href='/user/orders'" class="btn btn-secondary">
+                View Orders
+            </button>
+            <button onclick="window.location.href='/'" class="btn btn-primary">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get receipt from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const receipt = urlParams.get('receipt');
+    
+    if (receipt) {
+        document.getElementById('receipt-number').textContent = receipt;
+    }
+    
+    // Get order details from localStorage
+    const orderData = JSON.parse(localStorage.getItem('currentOrder'));
+    if (orderData) {
+        document.getElementById('order-amount').textContent = formatPrice(orderData.total);
+        
+        // Clear stored order
+        localStorage.removeItem('currentOrder');
+    }
+});
+</script>
+{% endblock %}

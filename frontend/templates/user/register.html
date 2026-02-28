@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Luxury Time{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0; max-width: 500px; margin: 0 auto;">
+    <div style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 20px rgba(0,0,0,0.1);">
+        <h1 style="font-size: 2rem; font-family: 'Playfair Display', serif; text-align: center; margin-bottom: 2rem;">
+            Create Account
+        </h1>
+
+        <form onsubmit="handleRegister(event)">
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Full Name</label>
+                <input type="text" id="fullname" required 
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Email</label>
+                <input type="email" id="email" required 
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Phone Number</label>
+                <input type="tel" id="phone" required placeholder="0712345678"
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Password</label>
+                <input type="password" id="password" required 
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Confirm Password</label>
+                <input type="password" id="confirm_password" required 
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label>
+                    <input type="checkbox" required> I agree to the <a href="/terms" style="color: #d4af37;">Terms & Conditions</a>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+                Register
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <p>Already have an account? <a href="/user/login" style="color: #d4af37;">Login here</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+function handleRegister(event) {
+    event.preventDefault();
+    
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm_password').value;
+    
+    if (password !== confirm) {
+        showNotification('Passwords do not match!', 'error');
+        return;
+    }
+    
+    // Simulate registration - replace with actual API call
+    showLoading('button[type="submit"]');
+    
+    setTimeout(() => {
+        hideLoading('button[type="submit"]', 'Register');
+        showNotification('Registration successful! Please login.', 'success');
+        setTimeout(() => {
+            window.location.href = '/user/login';
+        }, 1500);
+    }, 1500);
+}
+</script>
+{% endblock %}

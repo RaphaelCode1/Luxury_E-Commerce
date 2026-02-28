@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 2rem; text-align: center;">
+        Shopping Cart
+    </h1>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        <!-- Cart Items -->
+        <div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #d4af37;">
+                        <th style="text-align: left; padding: 1rem 0;">Product</th>
+                        <th style="text-align: left; padding: 1rem 0;">Price</th>
+                        <th style="text-align: left; padding: 1rem 0;">Quantity</th>
+                        <th style="text-align: left; padding: 1rem 0;">Total</th>
+                        <th style="text-align: left; padding: 1rem 0;"></th>
+                    </tr>
+                </thead>
+                <tbody id="cart-items">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 3rem;">
+                            Your cart is empty. <a href="/">Start shopping</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 2rem; display: flex; justify-content: space-between;">
+                <a href="/" class="btn btn-secondary">
+                    ← Continue Shopping
+                </a>
+                <button onclick="clearCart()" class="btn" style="background: #dc3545; color: white;">
+                    Clear Cart
+                </button>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div style="background: #f9f9f9; padding: 2rem; border-radius: 8px;">
+            <h2 style="margin-bottom: 1.5rem;">Order Summary</h2>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span>Subtotal:</span>
+                <span id="cart-total">KES 0</span>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                <span>Shipping:</span>
+                <span>Free</span>
+            </div>
+            
+            <div style="border-top: 1px solid #ddd; margin: 1rem 0; padding-top: 1rem;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.2rem;">
+                    <span>Total:</span>
+                    <span id="cart-grand-total">KES 0</span>
+                </div>
+            </div>
+
+            <a href="/cart/checkout" class="btn btn-primary" style="width: 100%; padding: 1rem; text-align: center; text-decoration: none;">
+                Proceed to Checkout
+            </a>
+
+            <div style="margin-top: 1rem; text-align: center;">
+                <img src="/static/images/icons/mpesa-icon.png" alt="M-Pesa" style="height: 40px;">
+                <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                    Secure payment via M-Pesa
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartDisplay();
+});
+
+function clearCart() {
+    if (confirm('Are you sure you want to clear your cart?')) {
+        localStorage.removeItem('cart');
+        updateCartDisplay();
+        showNotification('Cart cleared', 'info');
+    }
+}
+</script>
+{% endblock %}

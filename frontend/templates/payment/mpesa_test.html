@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}M-Pesa Test Payment{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0; max-width: 500px; margin: 0 auto;">
+    <div style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 20px rgba(0,0,0,0.1);">
+        <h1 style="text-align: center; margin-bottom: 2rem; color: #d4af37;">M-Pesa Test Payment</h1>
+        
+        <div style="background: #f0f8ff; padding: 1rem; border-radius: 4px; margin-bottom: 2rem;">
+            <p style="margin: 0; color: #0066cc;">✅ Sandbox Mode Active</p>
+            <small>Use test phone: 254708374149</small>
+        </div>
+
+        <form id="mpesa-form">
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Phone Number</label>
+                <input type="text" id="phone" value="254708374149" 
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Amount (KES)</label>
+                <input type="number" id="amount" value="1" min="1" 
+                       style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+                Simulate M-Pesa Payment
+            </button>
+        </form>
+
+        <div id="result" style="margin-top: 2rem; display: none;">
+            <h3>Payment Result:</h3>
+            <pre id="result-data" style="background: #f5f5f5; padding: 1rem; border-radius: 4px; overflow-x: auto;"></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('mpesa-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const phone = document.getElementById('phone').value;
+    const amount = document.getElementById('amount').value;
+    const resultDiv = document.getElementById('result');
+    const resultData = document.getElementById('result-data');
+    
+    // Simulate successful payment
+    const timestamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+    const checkoutId = `ws_CO_${timestamp}${phone.slice(-9)}`;
+    
+    const response = {
+        "MerchantRequestID": "a260-4f92-81ff-d3b0ce0ca6a2715",
+        "CheckoutRequestID": checkoutId,
+        "ResponseCode": "0",
+        "ResponseDescription": "Success. Request accepted for processing",
+        "CustomerMessage": "STK Push sent to your phone. Please check your phone and enter PIN."
+    };
+    
+    resultData.textContent = JSON.stringify(response, null, 2);
+    resultDiv.style.display = 'block';
+    
+    // Show notification
+    alert('✅ STK Push sent! Check your phone (simulated)');
+});
+</script>
+{% endblock %}

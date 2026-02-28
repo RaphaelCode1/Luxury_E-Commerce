@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}M-Pesa Payment{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0; max-width: 500px; margin: 0 auto;">
+    <div style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 20px rgba(0,0,0,0.1); text-align: center;">
+        <img src="/static/images/icons/mpesa-icon.png" alt="M-Pesa" style="height: 60px; margin-bottom: 1rem;">
+        
+        <h1 style="font-size: 2rem; font-family: 'Playfair Display', serif; margin-bottom: 0.5rem;">
+            Complete Payment
+        </h1>
+        
+        <p style="color: #666; margin-bottom: 2rem;">
+            Please check your phone for the M-Pesa prompt
+        </p>
+
+        <!-- Order Summary -->
+        <div id="order-summary" style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <!-- Loaded via JavaScript -->
+        </div>
+
+        <!-- Payment Details -->
+        <div style="margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                <span>Amount to Pay:</span>
+                <span id="payment-amount" style="font-weight: bold; color: #d4af37; font-size: 1.2rem;">KES 0</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                <span>M-Pesa Number:</span>
+                <span id="payment-phone" style="font-weight: bold;"></span>
+            </div>
+        </div>
+
+        <!-- Payment Button -->
+        <button id="payment-button" onclick="processMpesaPayment()" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+            Pay with M-Pesa
+        </button>
+
+        <!-- Loading State -->
+        <div id="payment-loading" style="display: none; margin-top: 2rem;">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem; color: #666;">Processing payment...</p>
+            <p style="font-size: 0.9rem;">Please wait while we confirm your payment</p>
+        </div>
+
+        <!-- Instructions -->
+        <div style="margin-top: 2rem; padding: 1rem; background: #e3f2fd; border-radius: 4px; text-align: left;">
+            <h4 style="margin-bottom: 0.5rem;">📱 How to pay:</h4>
+            <ol style="margin: 0; padding-left: 1.2rem; color: #555; font-size: 0.9rem;">
+                <li>Click the "Pay with M-Pesa" button above</li>
+                <li>You'll receive an STK Push on your phone</li>
+                <li>Enter your M-Pesa PIN</li>
+                <li>Wait for confirmation</li>
+                <li>Do not close this page</li>
+            </ol>
+        </div>
+
+        <!-- Cancel Button -->
+        <button onclick="window.location.href='/cart/view'" class="btn btn-secondary" style="margin-top: 1rem; width: 100%;">
+            Cancel and Return to Cart
+        </button>
+    </div>
+</div>
+
+<style>
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #d4af37;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script src="/static/js/checkout.js"></script>
+<script src="/static/js/mpesa.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadOrderSummary();
+    initPayment();
+});
+
+function processMpesaPayment() {
+    const button = document.getElementById('payment-button');
+    const loading = document.getElementById('payment-loading');
+    
+    button.style.display = 'none';
+    loading.style.display = 'block';
+    
+    // Simulate M-Pesa payment process
+    setTimeout(() => {
+        // In real implementation, this would call the actual M-Pesa API
+        showNotification('STK Push sent to your phone', 'success');
+        
+        // Simulate payment completion after 5 seconds
+        setTimeout(() => {
+            const receipt = 'MP' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            window.location.href = '/payment/success?receipt=' + receipt;
+        }, 5000);
+    }, 2000);
+}
+</script>
+{% endblock %}

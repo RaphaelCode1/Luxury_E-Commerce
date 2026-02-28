@@ -1,0 +1,31 @@
+ADDITIONAL MODEL NOTES:
+
+1. User Model:
+   - id, username, email, password_hash
+   - phone_number, address, is_admin
+   - email_verified, email_verified_at
+   - created_at, updated_at
+
+2. Product Model:
+   - id, name, brand, category
+   - description, price, image_url
+   - stock_quantity, featured
+   - created_at
+
+3. Cart Model:
+   - id, user_id, product_id
+   - quantity, added_at
+
+4. Order Model:
+   - id, user_id, order_number
+   - total_amount, status
+   - payment_method, mpesa_receipt
+   - phone_number, created_at
+
+5. OrderItem Model:
+   - id, order_id, product_id
+   - quantity, price_at_time
+
+6. PasswordResetToken:
+   - id, user_id, token
+   - expires_at, used

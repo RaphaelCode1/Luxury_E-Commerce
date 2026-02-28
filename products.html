@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Watches Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navigation */
+        .navbar { background: #1a1a1a; padding: 1rem 0; }
+        .navbar .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { color: #d4af37; font-size: 1.8rem; text-decoration: none; font-family: 'Playfair Display', serif; }
+        .logo span { color: #fff; }
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a { color: #fff; text-decoration: none; }
+        .nav-links a:hover { color: #d4af37; }
+        
+        /* Page Header */
+        .page-header { text-align: center; padding: 3rem 0; }
+        .page-header h1 { font-size: 3rem; font-family: 'Playfair Display', serif; margin-bottom: 1rem; }
+        .page-header p { color: #666; max-width: 600px; margin: 0 auto; }
+        
+        /* Filters */
+        .filters { display: flex; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        select, input { padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
+        select { width: 200px; }
+        input { width: 300px; }
+        
+        /* Product Grid */
+        .product-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 2rem; 
+            margin: 2rem 0;
+        }
+        
+        .product-card { 
+            background: #fff; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .product-card:hover { transform: translateY(-5px); }
+        
+        .product-image { 
+            width: 100%; 
+            height: 300px; 
+            object-fit: cover; 
+            border-bottom: 2px solid #d4af37;
+        }
+        
+        .product-info { padding: 1.5rem; }
+        .product-brand { 
+            color: #d4af37; 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .product-name { 
+            font-size: 1.2rem; 
+            margin: 0.5rem 0; 
+            font-weight: 600;
+        }
+        .product-price { 
+            font-size: 1.5rem; 
+            color: #d4af37; 
+            font-weight: 700; 
+            margin: 1rem 0; 
+        }
+        
+        /* Buttons */
+        .btn { 
+            display: inline-block; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            text-decoration: none; 
+            text-align: center;
+            transition: all 0.3s;
+            margin-right: 0.5rem;
+        }
+        .btn-primary { 
+            background: #d4af37; 
+            color: #1a1a1a; 
+        }
+        .btn-primary:hover { 
+            background: #c4a032; 
+        }
+        .btn-secondary { 
+            background: transparent; 
+            border: 2px solid #d4af37; 
+            color: #d4af37; 
+        }
+        .btn-secondary:hover { 
+            background: #d4af37; 
+            color: #1a1a1a; 
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        /* Footer */
+        .footer { 
+            background: #1a1a1a; 
+            color: #fff; 
+            padding: 3rem 0; 
+            margin-top: 4rem; 
+        }
+        .footer-content { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 2rem; 
+        }
+        .footer-section h3 { 
+            color: #d4af37; 
+            margin-bottom: 1rem; 
+        }
+        .footer-section ul { 
+            list-style: none; 
+        }
+        .footer-section a { 
+            color: #fff; 
+            text-decoration: none; 
+        }
+        .copyright { 
+            text-align: center; 
+            margin-top: 2rem; 
+            padding-top: 2rem; 
+            border-top: 1px solid #333; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">LUXURY<span>TIME</span></a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/products.html">Watches</a></li>
+                <li><a href="#">Gold</a></li>
+                <li><a href="#">Diamond</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Cart (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>Watches Collection</h1>
+            <p>Discover our exquisite selection of luxury watches</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+            <select id="brand-filter">
+                <option value="all">All Brands</option>
+                <option value="rolex">Rolex</option>
+                <option value="omega">Omega</option>
+                <option value="tag">Tag Heuer</option>
+                <option value="cartier">Cartier</option>
+            </select>
+            <input type="search" id="search" placeholder="Search products..." onkeyup="searchProducts()">
+        </div>
+
+        <!-- Product Grid -->
+        <div class="product-grid" id="product-grid">
+            <!-- Rolex Submariner -->
+            <div class="product-card" data-brand="rolex" data-name="Submariner Date">
+                <img src="/frontend/static/images/products/watches/rolex-submariner.jpg" alt="Rolex Submariner" class="product-image" onerror="this.src='https://via.placeholder.com/300x300?text=Rolex'">
+                <div class="product-info">
+                    <div class="product-brand">ROLEX</div>
+                    <h3 class="product-name">Submariner Date</h3>
+                    <div class="product-price">KES 1,450,000</div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addToCart('Rolex Submariner', 1450000)">Add to Cart</button>
+                        <a href="/product-detail.html?id=1" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Omega Speedmaster -->
+            <div class="product-card" data-brand="omega" data-name="Speedmaster Moonwatch">
+                <img src="/frontend/static/images/products/watches/omega-speedmaster.jpg" alt="Omega Speedmaster" class="product-image" onerror="this.src='https://via.placeholder.com/300x300?text=Omega'">
+                <div class="product-info">
+                    <div class="product-brand">OMEGA</div>
+                    <h3 class="product-name">Speedmaster Moonwatch</h3>
+                    <div class="product-price">KES 1,100,000</div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addToCart('Omega Speedmaster', 1100000)">Add to Cart</button>
+                        <a href="/product-detail.html?id=2" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tag Heuer Carrera -->
+            <div class="product-card" data-brand="tag" data-name="Carrera Calibre 16">
+                <img src="/frontend/static/images/products/watches/tag-carrera.jpg" alt="Tag Heuer Carrera" class="product-image" onerror="this.src='https://via.placeholder.com/300x300?text=Tag+Heuer'">
+                <div class="product-info">
+                    <div class="product-brand">TAG HEUER</div>
+                    <h3 class="product-name">Carrera Calibre 16</h3>
+                    <div class="product-price">KES 520,000</div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addToCart('Tag Heuer Carrera', 520000)">Add to Cart</button>
+                        <a href="/product-detail.html?id=3" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cartier Santos -->
+            <div class="product-card" data-brand="cartier" data-name="Santos de Cartier">
+                <img src="/frontend/static/images/products/watches/cartier-santos.jpg" alt="Cartier Santos" class="product-image" onerror="this.src='https://via.placeholder.com/300x300?text=Cartier'">
+                <div class="product-info">
+                    <div class="product-brand">CARTIER</div>
+                    <h3 class="product-name">Santos de Cartier</h3>
+                    <div class="product-price">KES 1,650,000</div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addToCart('Cartier Santos', 1650000)">Add to Cart</button>
+                        <a href="/product-detail.html?id=4" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Omega Seamaster -->
+            <div class="product-card" data-brand="omega" data-name="Seamaster Aqua Terra">
+                <img src="/frontend/static/images/products/watches/omega-seamaster.jpg" alt="Omega Seamaster" class="product-image" onerror="this.src='https://via.placeholder.com/300x300?text=Omega'">
+                <div class="product-info">
+                    <div class="product-brand">OMEGA</div>
+                    <h3 class="product-name">Seamaster Aqua Terra</h3>
+                    <div class="product-price">KES 850,000</div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addToCart('Omega Seamaster', 850000)">Add to Cart</button>
+                        <a href="/product-detail.html?id=5" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tag Heuer Aquaracer -->
+            <div class="product-card" data-brand="tag" data-name="Aquaracer">
+                <img src="/frontend/static/images/products/watches/tag-aquaracer.jpg" alt="Tag Heuer Aquaracer" class="product-image" onerror="this.src='https://via.placeholder.com/300x300?text=Tag+Heuer'">
+                <div class="product-info">
+                    <div class="product-brand">TAG HEUER</div>
+                    <h3 class="product-name">Aquaracer</h3>
+                    <div class="product-price">KES 380,000</div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="addToCart('Tag Heuer Aquaracer', 380000)">Add to Cart</button>
+                        <a href="/product-detail.html?id=6" class="btn btn-secondary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LUXURYTIME</h3>
+                    <p>Premium watches and jewelry for discerning collectors.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>Nairobi, Kenya</li>
+                        <li>+254 700 000000</li>
+                        <li>info@luxurytime.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 LUXURYTIME. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple cart functionality
+        let cart = [];
+        
+        function addToCart(productName, price) {
+            cart.push({ name: productName, price: price });
+            document.getElementById('cart-count').textContent = cart.length;
+            alert(productName + ' added to cart!');
+        }
+        
+        // Search functionality
+        function searchProducts() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                const name = product.getAttribute('data-name').toLowerCase();
+                if (name.includes(searchTerm)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+        
+        // Filter by brand
+        document.getElementById('brand-filter').addEventListener('change', function() {
+            const brand = this.value;
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                if (brand === 'all' || product.getAttribute('data-brand') === brand) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

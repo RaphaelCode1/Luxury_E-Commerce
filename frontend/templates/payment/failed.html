@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Failed{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0; max-width: 500px; margin: 0 auto;">
+    <div style="background: #fff; padding: 3rem; border-radius: 8px; box-shadow: 0 2px 20px rgba(0,0,0,0.1); text-align: center;">
+        <!-- Failed Icon -->
+        <div style="width: 80px; height: 80px; background: #dc3545; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem;">
+            <span style="color: white; font-size: 3rem;">✗</span>
+        </div>
+
+        <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 1rem; color: #dc3545;">
+            Payment Failed
+        </h1>
+        
+        <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">
+            We couldn't process your payment. Please try again.
+        </p>
+
+        <!-- Error Details -->
+        <div style="background: #fff3f3; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+            <h3 style="color: #dc3545; margin-bottom: 1rem;">Possible Reasons:</h3>
+            <ul style="text-align: left; color: #666;">
+                <li style="margin-bottom: 0.5rem;">Insufficient M-Pesa balance</li>
+                <li style="margin-bottom: 0.5rem;">Transaction cancelled</li>
+                <li style="margin-bottom: 0.5rem;">Network timeout</li>
+                <li style="margin-bottom: 0.5rem;">Wrong M-Pesa PIN</li>
+            </ul>
+            <p style="margin-top: 1rem; color: #666;">
+                Error Code: <span id="error-code">MP-1001</span>
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: grid; gap: 1rem;">
+            <button onclick="retryPayment()" class="btn btn-primary">
+                Try Again
+            </button>
+            <button onclick="window.location.href='/cart/view'" class="btn btn-secondary">
+                Return to Cart
+            </button>
+            <button onclick="window.location.href='/contact'" class="btn" style="background: transparent; border: 1px solid #ddd;">
+                Contact Support
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function retryPayment() {
+    const orderData = JSON.parse(localStorage.getItem('currentOrder'));
+    if (orderData) {
+        window.location.href = '/payment/mpesa';
+    } else {
+        window.location.href = '/cart/view';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+        document.getElementById('error-code').textContent = code;
+    }
+});
+</script>
+{% endblock %}

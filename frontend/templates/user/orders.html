@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 2rem;">
+        My Orders
+    </h1>
+
+    <div style="background: #fff; border-radius: 8px; overflow: hidden;">
+        <!-- Order List -->
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #f9f9f9; border-bottom: 2px solid #d4af37;">
+                    <th style="padding: 1rem; text-align: left;">Order #</th>
+                    <th style="padding: 1rem; text-align: left;">Date</th>
+                    <th style="padding: 1rem; text-align: left;">Items</th>
+                    <th style="padding: 1rem; text-align: left;">Total</th>
+                    <th style="padding: 1rem; text-align: left;">Status</th>
+                    <th style="padding: 1rem; text-align: left;">Receipt</th>
+                    <th style="padding: 1rem; text-align: left;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample Order 1 -->
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 1rem;">ORD-2026-0001</td>
+                    <td style="padding: 1rem;">Feb 15, 2026</td>
+                    <td style="padding: 1rem;">Rolex Submariner</td>
+                    <td style="padding: 1rem;">KES 1,450,000</td>
+                    <td style="padding: 1rem;">
+                        <span style="background: #4CAF50; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem;">
+                            Delivered
+                        </span>
+                    </td>
+                    <td style="padding: 1rem;">MPA1B2C3D4</td>
+                    <td style="padding: 1rem;">
+                        <button class="btn btn-secondary" style="padding: 0.3rem 1rem;" onclick="viewOrder('ORD-2026-0001')">
+                            View
+                        </button>
+                    </td>
+                </tr>
+                
+                <!-- Sample Order 2 -->
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 1rem;">ORD-2026-0002</td>
+                    <td style="padding: 1rem;">Feb 10, 2026</td>
+                    <td style="padding: 1rem;">Gold Necklace</td>
+                    <td style="padding: 1rem;">KES 185,000</td>
+                    <td style="padding: 1rem;">
+                        <span style="background: #2196F3; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem;">
+                            Shipped
+                        </span>
+                    </td>
+                    <td style="padding: 1rem;">MPE5F6G7H8</td>
+                    <td style="padding: 1rem;">
+                        <button class="btn btn-secondary" style="padding: 0.3rem 1rem;" onclick="viewOrder('ORD-2026-0002')">
+                            View
+                        </button>
+                    </td>
+                </tr>
+                
+                <!-- Sample Order 3 -->
+                <tr>
+                    <td style="padding: 1rem;">ORD-2026-0003</td>
+                    <td style="padding: 1rem;">Feb 5, 2026</td>
+                    <td style="padding: 1rem;">Diamond Ring</td>
+                    <td style="padding: 1rem;">KES 650,000</td>
+                    <td style="padding: 1rem;">
+                        <span style="background: #ff9800; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem;">
+                            Processing
+                        </span>
+                    </td>
+                    <td style="padding: 1rem;">MPI9J0K1L2</td>
+                    <td style="padding: 1rem;">
+                        <button class="btn btn-secondary" style="padding: 0.3rem 1rem;" onclick="viewOrder('ORD-2026-0003')">
+                            View
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Empty State (show if no orders) -->
+    <div id="empty-orders" style="display: none; text-align: center; padding: 4rem;">
+        <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">You haven't placed any orders yet.</p>
+        <a href="/" class="btn btn-primary">Start Shopping</a>
+    </div>
+</div>
+
+<script>
+function viewOrder(orderNumber) {
+    window.location.href = '/user/orders/' + orderNumber;
+}
+
+// Check if orders exist (simulated)
+document.addEventListener('DOMContentLoaded', function() {
+    // In real app, check if orders array is empty
+    const hasOrders = true; // Change to false to test empty state
+    
+    if (!hasOrders) {
+        document.querySelector('table').style.display = 'none';
+        document.getElementById('empty-orders').style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

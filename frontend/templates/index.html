@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Luxury Watches & Jewelry{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1 class="hero-title">Timeless Elegance</h1>
+        <p class="hero-subtitle">Discover our collection of luxury watches and fine jewelry</p>
+        <a href="/products/watches" class="btn btn-primary">Shop Now</a>
+        <a href="/about" class="btn btn-secondary">Learn More</a>
+    </div>
+</section>
+
+<!-- Category Tabs -->
+<div class="container">
+    <div class="category-tabs">
+        <button class="category-tab active" onclick="filterProducts('all')">All</button>
+        <button class="category-tab" onclick="filterProducts('watches')">Watches</button>
+        <button class="category-tab" onclick="filterProducts('gold')">Gold</button>
+        <button class="category-tab" onclick="filterProducts('diamond')">Diamond</button>
+    </div>
+</div>
+
+<!-- Product Grid -->
+<div class="container">
+    <div id="product-grid" class="product-grid">
+        <!-- Products loaded via JavaScript -->
+    </div>
+</div>
+
+<!-- Features Section -->
+<section style="padding: 4rem 0; background: #f9f9f9;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; text-align: center;">
+            <div>
+                <h3>Free Shipping</h3>
+                <p>On orders over KES 100,000</p>
+            </div>
+            <div>
+                <h3>24/7 Support</h3>
+                <p>Dedicated customer service</p>
+            </div>
+            <div>
+                <h3>Secure Payments</h3>
+                <p>M-Pesa integrated securely</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/products.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProducts('all');
+    });
+</script>
+{% endblock %}

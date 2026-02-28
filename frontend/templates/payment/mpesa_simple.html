@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>M-Pesa Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #d4af37; text-align: center; }
+        .info { background: #e8f4fd; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .success { color: green; }
+        .warning { color: orange; }
+        pre { background: #f0f0f0; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>M-Pesa Configuration Test</h1>
+        
+        <div class="info">
+            <h3>Your Configuration:</h3>
+            <p><strong>Shortcode:</strong> 174379</p>
+            <p><strong>Passkey:</strong> bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919</p>
+            <p><strong>Test Phone:</strong> 254708374149</p>
+            <p class="success">✅ Passkey and Shortcode are configured correctly!</p>
+            <p class="warning">⚠️ Consumer Key and Secret need to be added for real transactions</p>
+        </div>
+
+        <h3>Sample STK Push Payload:</h3>
+        <pre id="payload"></pre>
+
+        <h3>Expected Response:</h3>
+        <pre>{
+  "MerchantRequestID": "a260-4f92-81ff-d3b0ce0ca6a2715",
+  "CheckoutRequestID": "ws_CO_25022026011118938708374149",
+  "ResponseCode": "0",
+  "ResponseDescription": "Success. Request accepted for processing",
+  "CustomerMessage": "Success. Request accepted for processing"
+}</pre>
+
+        <p style="text-align: center; margin-top: 20px;">
+            <a href="/payment/mpesa-test" class="btn">Go to Test Page</a>
+        </p>
+    </div>
+
+    <script>
+        // Generate sample payload
+        const timestamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
+        const payload = {
+            "BusinessShortCode": "174379",
+            "Password": "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE4...",
+            "Timestamp": timestamp,
+            "TransactionType": "CustomerPayBillOnline",
+            "Amount": "1",
+            "PartyA": "254708374149",
+            "PartyB": "174379",
+            "PhoneNumber": "254708374149",
+            "CallBackURL": "https://your-domain.com/mpesa/callback",
+            "AccountReference": "LuxuryTime",
+            "TransactionDesc": "Test"
+        };
+        document.getElementById('payload').textContent = JSON.stringify(payload, null, 2);
+    </script>
+</body>
+</html>

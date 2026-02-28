@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 2rem; text-align: center;">
+        Checkout
+    </h1>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        <!-- Checkout Form -->
+        <div>
+            <form id="checkout-form" onsubmit="placeOrder(event)">
+                <div style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <h2 style="margin-bottom: 1.5rem;">Contact Information</h2>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">Full Name *</label>
+                        <input type="text" name="fullname" required 
+                               style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">Email Address *</label>
+                        <input type="email" name="email" required 
+                               style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">Phone Number (for M-Pesa) *</label>
+                        <input type="tel" name="phone" required placeholder="e.g., 0712345678"
+                               style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <p style="font-size: 0.8rem; color: #666; margin-top: 0.3rem;">
+                            You'll receive an M-Pesa prompt on this number
+                        </p>
+                    </div>
+
+                    <h2 style="margin: 2rem 0 1.5rem;">Delivery Information</h2>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">Delivery Address *</label>
+                        <input type="text" name="address" required placeholder="Street address, building, etc."
+                               style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem;">City *</label>
+                        <input type="text" name="city" required 
+                               style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1rem;">
+                        Continue to Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div>
+            <div style="background: #f9f9f9; padding: 2rem; border-radius: 8px; position: sticky; top: 100px;">
+                <h2 style="margin-bottom: 1.5rem;">Your Order</h2>
+                
+                <div id="checkout-summary">
+                    <!-- Order items loaded via JavaScript -->
+                </div>
+
+                <div style="border-top: 1px solid #ddd; margin: 1rem 0; padding-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; font-weight: bold;">
+                        <span>Total:</span>
+                        <span id="checkout-total">KES 0</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1rem; background: #e8f5e9; border-radius: 4px;">
+                    <p style="color: #2e7d32; margin: 0;">
+                        ✓ Secure payment via M-Pesa. You'll enter your PIN on your phone.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cart = getCart();
+    const summaryEl = document.getElementById('checkout-summary');
+    const totalEl = document.getElementById('checkout-total');
+    
+    if (cart.length === 0) {
+        window.location.href = '/cart/view';
+        return;
+    }
+    
+    let html = '';
+    cart.forEach(item => {
+        html += `
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #eee;">
+                <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                <div style="flex: 1;">
+                    <h4 style="margin: 0;">${item.brand} ${item.name}</h4>
+                    <p style="margin: 0.3rem 0; color: #666;">Qty: ${item.quantity}</p>
+                    <p style="margin: 0; color: #d4af37; font-weight: 600;">${formatPrice(item.price)}</p>
+                </div>
+            </div>
+        `;
+    });
+    
+    summaryEl.innerHTML = html;
+    totalEl.textContent = formatPrice(calculateTotal());
+});
+</script>
+{% endblock %}

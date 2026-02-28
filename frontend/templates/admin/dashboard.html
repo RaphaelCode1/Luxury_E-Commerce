@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem 0;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif;">Admin Dashboard</h1>
+        <div>
+            <a href="/admin/products/add" class="btn btn-primary">+ Add Product</a>
+            <a href="/admin/orders" class="btn btn-secondary">View Orders</a>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+        <h2 style="margin-bottom: 1.5rem;">Quick Actions</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem;">
+            <a href="/admin/products/add" style="text-decoration: none;">
+                <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center; transition: transform 0.3s;" 
+                     onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span style="font-size: 2.5rem; color: #d4af37;">➕</span>
+                    <h3 style="margin-top: 0.5rem;">Add Product</h3>
+                    <p style="color: #666; font-size: 0.9rem;">Create new product</p>
+                </div>
+            </a>
+            
+            <a href="/admin/products" style="text-decoration: none;">
+                <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center; transition: transform 0.3s;"
+                     onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span style="font-size: 2.5rem; color: #d4af37;">📦</span>
+                    <h3 style="margin-top: 0.5rem;">Manage Products</h3>
+                    <p style="color: #666; font-size: 0.9rem;">Edit, delete, update</p>
+                </div>
+            </a>
+            
+            <a href="/admin/orders" style="text-decoration: none;">
+                <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center; transition: transform 0.3s;"
+                     onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span style="font-size: 2.5rem; color: #d4af37;">📋</span>
+                    <h3 style="margin-top: 0.5rem;">View Orders</h3>
+                    <p style="color: #666; font-size: 0.9rem;">Process orders</p>
+                </div>
+            </a>
+            
+            <a href="/admin/users" style="text-decoration: none;">
+                <div style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; text-align: center; transition: transform 0.3s;"
+                     onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <span style="font-size: 2.5rem; color: #d4af37;">👥</span>
+                    <h3 style="margin-top: 0.5rem;">Manage Users</h3>
+                    <p style="color: #666; font-size: 0.9rem;">View customers</p>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Bulk Discount Form -->
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+            <h3 style="margin-bottom: 1rem;">📉 Apply Bulk Discount</h3>
+            <form id="bulk-discount-form" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Category</label>
+                    <select id="discount-category" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <option value="all">All Categories</option>
+                        <option value="watches">Watches</option>
+                        <option value="gold">Gold</option>
+                        <option value="diamond">Diamond</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label style="display: block; margin-bottom: 0.5rem;">Discount Percentage</label>
+                    <input type="number" id="discount-value" min="0" max="100" value="10"
+                           style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary" style="padding: 0.8rem 2rem;">Apply Discount</button>
+                </div>
+            </form>
+            <p id="discount-message" style="margin-top: 1rem; color: #4CAF50; display: none;"></p>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+        <div style="background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h3 style="color: #666; margin-bottom: 0.5rem;">Total Products</h3>
+            <p style="font-size: 2.5rem; font-weight: bold; color: #d4af37;">{{ total_products }}</p>
+            <small style="color: #ff9800;">⚠️ {{ low_stock_products }} low stock</small>
+        </div>
+        <div style="background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h3 style="color: #666; margin-bottom: 0.5rem;">Total Orders</h3>
+            <p style="font-size: 2.5rem; font-weight: bold; color: #d4af37;">{{ total_orders }}</p>
+            <small style="color: #ff9800;">⏳ {{ pending_orders }} pending</small>
+        </div>
+        <div style="background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h3 style="color: #666; margin-bottom: 0.5rem;">Total Users</h3>
+            <p style="font-size: 2.5rem; font-weight: bold; color: #d4af37;">{{ total_users }}</p>
+            <small style="color: #4CAF50;">👤 registered users</small>
+        </div>
+        <div style="background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h3 style="color: #666; margin-bottom: 0.5rem;">Monthly Revenue</h3>
+            <p style="font-size: 2.5rem; font-weight: bold; color: #d4af37;">KES {{ "{:,.0f}".format(monthly_revenue) }}</p>
+            <small style="color: #4CAF50;">📈 this month</small>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2>Recent Orders</h2>
+            <a href="/admin/orders" class="btn btn-secondary">View All</a>
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #d4af37;">
+                    <th style="text-align: left; padding: 1rem 0;">Order #</th>
+                    <th style="text-align: left; padding: 1rem 0;">Customer</th>
+                    <th style="text-align: left; padding: 1rem 0;">Total</th>
+                    <th style="text-align: left; padding: 1rem 0;">Status</th>
+                    <th style="text-align: left; padding: 1rem 0;">Date</th>
+                    <th style="text-align: left; padding: 1rem 0;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in recent_orders %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 1rem 0;">{{ order.order_number }}</td>
+                    <td style="padding: 1rem 0;">{{ order.customer.username if order.customer else 'Guest' }}</td>
+                    <td style="padding: 1rem 0;">KES {{ "{:,.0f}".format(order.total_amount) }}</td>
+                    <td style="padding: 1rem 0;">
+                        <span style="background: {% if order.status == 'paid' %}#4CAF50{% elif order.status == 'pending' %}#ff9800{% elif order.status == 'delivered' %}#2196F3{% else %}#f44336{% endif %}; 
+                                   color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.9rem;">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem 0;">{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td style="padding: 1rem 0;">
+                        <a href="/admin/orders/{{ order.id }}" class="btn btn-secondary" style="padding: 0.3rem 1rem;">View</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem;">No orders found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+// Bulk discount form handler
+document.getElementById('bulk-discount-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const category = document.getElementById('discount-category').value;
+    const discount = document.getElementById('discount-value').value;
+    const messageEl = document.getElementById('discount-message');
+    
+    if (confirm(`Apply ${discount}% discount to ${category === 'all' ? 'all' : category} products?`)) {
+        fetch('/admin/products/bulk-discount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ category: category, discount: discount })
+        })
+        .then(response => response.json())
+        .then(data => {
+            messageEl.textContent = data.message;
+            messageEl.style.display = 'block';
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        });
+    }
+});
+
+// Auto-refresh quick stats every 30 seconds
+function refreshQuickStats() {
+    fetch('/admin/quick-stats')
+        .then(response => response.json())
+        .then(data => {
+            // Update stats if needed
+            console.log('Stats updated:', data);
+        });
+}
+
+// Refresh every 30 seconds
+setInterval(refreshQuickStats, 30000);
+</script>
+{% endblock %}

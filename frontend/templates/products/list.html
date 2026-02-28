@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category|title if category else 'Products' }} - Luxury Collection{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div style="text-align: center; padding: 3rem 0;">
+        <h1 style="font-size: 3rem; font-family: 'Playfair Display', serif;">
+            {{ category|title if category else 'Our Collection' }}
+        </h1>
+        <p style="color: #666; max-width: 600px; margin: 1rem auto;">
+            Discover our exquisite selection of luxury {{ category if category else 'watches and jewelry' }}
+        </p>
+    </div>
+
+    <!-- Filters and Sort -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <select id="sort-select" onchange="sortProducts(this.value)" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="featured">Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+            </select>
+            
+            <select id="brand-filter" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="all">All Brands</option>
+                <option value="Rolex">Rolex</option>
+                <option value="Omega">Omega</option>
+                <option value="Tag Heuer">Tag Heuer</option>
+                <option value="Cartier">Cartier</option>
+                <option value="Luxury Gold">Luxury Gold</option>
+                <option value="Luxury Diamonds">Luxury Diamonds</option>
+            </select>
+        </div>
+        
+        <div>
+            <input type="search" id="search-input" placeholder="Search products..." 
+                   style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; width: 250px;"
+                   onkeyup="searchProducts(this.value)">
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem;">
+        <!-- Products will be loaded via JavaScript -->
+    </div>
+</div>
+
+<script>
+// Sample product data with reasonable prices
+const products = {
+    watches: [
+        { id: 1, name: 'Submariner Date', brand: 'Rolex', price: 2999, image: '/static/images/products/watches/rolex-submariner.jpg', category: 'watches' },
+        { id: 2, name: 'Daytona Cosmograph', brand: 'Rolex', price: 3499, image: '/static/images/products/watches/rolex-daytona.jpg', category: 'watches' },
+        { id: 3, name: 'Speedmaster Moonwatch', brand: 'Omega', price: 2799, image: '/static/images/products/watches/omega-speedmaster.jpg', category: 'watches' },
+        { id: 4, name: 'Seamaster Aqua Terra', brand: 'Omega', price: 2299, image: '/static/images/products/watches/omega-seamaster.jpg', category: 'watches' },
+        { id: 5, name: 'Carrera Calibre 16', brand: 'Tag Heuer', price: 1899, image: '/static/images/products/watches/tag-carrera.jpg', category: 'watches' },
+        { id: 6, name: 'Aquaracer', brand: 'Tag Heuer', price: 1599, image: '/static/images/products/watches/tag-aquaracer.jpg', category: 'watches' },
+        { id: 7, name: 'Santos de Cartier', brand: 'Cartier', price: 3199, image: '/static/images/products/watches/cartier-santos.jpg', category: 'watches' },
+        { id: 8, name: 'Tank Française', brand: 'Cartier', price: 2499, image: '/static/images/products/watches/cartier-tank.jpg', category: 'watches' }
+    ],
+    gold: [
+        { id: 9, name: 'Gold Chain Necklace', brand: 'Luxury Gold', price: 899, image: '/static/images/products/gold/gold-necklace.jpg', category: 'gold' },
+        { id: 10, name: 'Gold Cuban Bracelet', brand: 'Luxury Gold', price: 599, image: '/static/images/products/gold/gold-bracelet.jpg', category: 'gold' },
+        { id: 11, name: 'Gold Hoop Earrings', brand: 'Luxury Gold', price: 399, image: '/static/images/products/gold/gold-earrings.jpg', category: 'gold' },
+        { id: 12, name: 'Gold Signet Ring', brand: 'Luxury Gold', price: 499, image: '/static/images/products/gold/gold-ring.jpg', category: 'gold' },
+        { id: 13, name: 'Gold Pendant', brand: 'Luxury Gold', price: 349, image: '/static/images/products/gold/gold-pendant.jpg', category: 'gold' },
+        { id: 14, name: 'Gold Bangle', brand: 'Luxury Gold', price: 449, image: '/static/images/products/gold/gold-bangle.jpg', category: 'gold' }
+    ],
+    diamond: [
+        { id: 15, name: 'Diamond Engagement Ring', brand: 'Luxury Diamonds', price: 2499, image: '/static/images/products/diamond/engagement-ring.jpg', category: 'diamond' },
+        { id: 16, name: 'Diamond Stud Earrings', brand: 'Luxury Diamonds', price: 1299, image: '/static/images/products/diamond/diamond-earrings.jpg', category: 'diamond' },
+        { id: 17, name: 'Diamond Tennis Bracelet', brand: 'Luxury Diamonds', price: 1999, image: '/static/images/products/diamond/tennis-bracelet.jpg', category: 'diamond' },
+        { id: 18, name: 'Diamond Pendant', brand: 'Luxury Diamonds', price: 899, image: '/static/images/products/diamond/diamond-pendant.jpg', category: 'diamond' },
+        { id: 19, name: 'Diamond Eternity Ring', brand: 'Luxury Diamonds', price: 1699, image: '/static/images/products/diamond/eternity-ring.jpg', category: 'diamond' },
+        { id: 20, name: 'Diamond Cocktail Ring', brand: 'Luxury Diamonds', price: 2199, image: '/static/images/products/diamond/cocktail-ring.jpg', category: 'diamond' }
+    ]
+};
+
+// Load products on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const category = window.location.pathname.split('/').pop();
+    loadProducts(category);
+});
+
+function loadProducts(category = 'all') {
+    const productGrid = document.getElementById('product-grid');
+    if (!productGrid) return;
+    
+    let allProducts = [];
+    
+    if (category === 'all' || category === 'products') {
+        allProducts = [...products.watches, ...products.gold, ...products.diamond];
+    } else if (category === 'watches') {
+        allProducts = products.watches;
+    } else if (category === 'gold') {
+        allProducts = products.gold;
+    } else if (category === 'diamond') {
+        allProducts = products.diamond;
+    }
+    
+    displayProducts(allProducts);
+}
+
+function displayProducts(products) {
+    const productGrid = document.getElementById('product-grid');
+    if (!productGrid) return;
+    
+    if (products.length === 0) {
+        productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 3rem;">No products found</p>';
+        return;
+    }
+    
+    productGrid.innerHTML = products.map(product => `
+        <div class="product-card" data-id="${product.id}" data-brand="${product.brand}" data-price="${product.price}">
+            <img src="${product.image}" alt="${product.name}" class="product-image" 
+                 onerror="this.src='https://via.placeholder.com/300x300?text=${product.brand}'">
+            <div class="product-info">
+                <div class="product-brand">${product.brand.toUpperCase()}</div>
+                <h3 class="product-name">${product.name}</h3>
+                <div class="product-price">KES ${product.price}</div>
+                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                    <a href="/product/${product.id}" class="btn btn-secondary" style="flex: 1; text-align: center;">View Details</a>
+                    <button onclick="addToCart(${product.id})" class="btn btn-primary" style="flex: 1;">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Search functionality
+function searchProducts(query) {
+    const allProducts = [...products.watches, ...products.gold, ...products.diamond];
+    const filtered = allProducts.filter(product => 
+        product.name.toLowerCase().includes(query.toLowerCase()) ||
+        product.brand.toLowerCase().includes(query.toLowerCase())
+    );
+    displayProducts(filtered);
+}
+
+// Sort products
+function sortProducts(sortBy) {
+    const productGrid = document.getElementById('product-grid');
+    const products = Array.from(document.querySelectorAll('.product-card'));
+    
+    products.sort((a, b) => {
+        const priceA = parseInt(a.dataset.price);
+        const priceB = parseInt(b.dataset.price);
+        
+        if (sortBy === 'price-low') {
+            return priceA - priceB;
+        } else if (sortBy === 'price-high') {
+            return priceB - priceA;
+        }
+        return 0;
+    });
+    
+    productGrid.innerHTML = '';
+    products.forEach(product => productGrid.appendChild(product));
+}
+
+// Filter by brand
+document.getElementById('brand-filter')?.addEventListener('change', function() {
+    const brand = this.value;
+    const allProducts = [...products.watches, ...products.gold, ...products.diamond];
+    
+    if (brand === 'all') {
+        displayProducts(allProducts);
+    } else {
+        const filtered = allProducts.filter(product => product.brand === brand);
+        displayProducts(filtered);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Watches & Jewelry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; color: #333; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navigation */
+        .navbar { background: #1a1a1a; padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .navbar .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { color: #d4af37; font-size: 1.8rem; font-weight: 700; text-decoration: none; font-family: 'Playfair Display', serif; }
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a { color: #fff; text-decoration: none; }
+        .nav-links a:hover { color: #d4af37; }
+        
+        /* Hero */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/frontend/static/images/banners/hero-banner.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+        }
+        .hero-title { font-size: 4rem; margin-bottom: 1rem; font-family: 'Playfair Display', serif; }
+        .hero-subtitle { font-size: 1.5rem; margin-bottom: 2rem; color: #d4af37; }
+        
+        /* Buttons */
+        .btn { display: inline-block; padding: 12px 30px; border: none; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; text-decoration: none; margin: 0 0.5rem; }
+        .btn-primary { background: #d4af37; color: #1a1a1a; }
+        .btn-secondary { background: transparent; border: 2px solid #d4af37; color: #d4af37; }
+        
+        /* Category Tabs */
+        .category-tabs { display: flex; justify-content: center; gap: 2rem; margin: 3rem 0; }
+        .category-tab { padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; font-size: 1.1rem; cursor: pointer; }
+        .category-tab.active { border-bottom-color: #d4af37; color: #d4af37; }
+        
+        /* Product Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 2rem 0; }
+        .product-card { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .product-image { width: 100%; height: 300px; object-fit: cover; }
+        .product-info { padding: 1.5rem; }
+        .product-brand { color: #d4af37; font-size: 0.9rem; text-transform: uppercase; }
+        .product-name { font-size: 1.2rem; margin: 0.5rem 0; }
+        .product-price { font-size: 1.5rem; color: #d4af37; font-weight: 700; margin: 1rem 0; }
+        
+        /* Features */
+        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; padding: 4rem 0; background: #f9f9f9; text-align: center; }
+        .feature h3 { color: #d4af37; margin-bottom: 0.5rem; }
+        
+        /* Footer */
+        .footer { background: #1a1a1a; color: #fff; padding: 3rem 0; margin-top: 4rem; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+        .footer-section h3 { color: #d4af37; margin-bottom: 1rem; }
+        .footer-section ul { list-style: none; }
+        .footer-section a { color: #fff; text-decoration: none; }
+        .copyright { text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #333; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">LUXURY<span style="color: #fff;">TIME</span></a>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="#">Watches</a></li>
+                <li><a href="#">Gold</a></li>
+                <li><a href="#">Diamond</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Cart (0)</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Timeless Elegance</h1>
+            <p class="hero-subtitle">Discover our collection of luxury watches and fine jewelry</p>
+            <a href="#" class="btn btn-primary">Shop Now</a>
+            <a href="#" class="btn btn-secondary">Learn More</a>
+        </div>
+    </section>
+
+    <!-- Category Tabs -->
+    <div class="container">
+        <div class="category-tabs">
+            <button class="category-tab active">All</button>
+            <button class="category-tab">Watches</button>
+            <button class="category-tab">Gold</button>
+            <button class="category-tab">Diamond</button>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="container">
+        <div class="product-grid">
+            <!-- Watch 1 -->
+            <div class="product-card">
+                <img src="/frontend/static/images/products/watches/rolex-submariner.jpg" alt="Rolex Submariner" class="product-image">
+                <div class="product-info">
+                    <div class="product-brand">Rolex</div>
+                    <h3 class="product-name">Submariner Date</h3>
+                    <div class="product-price">KES 1,450,000</div>
+                    <button class="btn btn-primary">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Watch 2 -->
+            <div class="product-card">
+                <img src="/frontend/static/images/products/watches/omega-speedmaster.jpg" alt="Omega Speedmaster" class="product-image">
+                <div class="product-info">
+                    <div class="product-brand">Omega</div>
+                    <h3 class="product-name">Speedmaster Moonwatch</h3>
+                    <div class="product-price">KES 1,100,000</div>
+                    <button class="btn btn-primary">Add to Cart</button>
+                </div>
+            </div>
+            
+            <!-- Gold Necklace -->
+            <div class="product-card">
+                <img src="/frontend/static/images/products/gold/gold-necklace.jpg" alt="Gold Necklace" class="product-image">
+                <div class="product-info">
+                    <div class="product-brand">Luxury Gold</div>
+                    <h3 class="product-name">Gold Chain Necklace</h3>
+                    <div class="product-price">KES 185,000</div>
+                    <button class="btn btn-primary">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+                <div class="feature">
+                    <h3>Free Shipping</h3>
+                    <p>On orders over KES 100,000</p>
+                </div>
+                <div class="feature">
+                    <h3>24/7 Support</h3>
+                    <p>Dedicated customer service</p>
+                </div>
+                <div class="feature">
+                    <h3>Secure Payments</h3>
+                    <p>M-Pesa integrated securely</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LUXURYTIME</h3>
+                    <p>Premium watches and jewelry for discerning collectors.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul>
+                        <li>Nairobi, Kenya</li>
+                        <li>+254 700 000000</li>
+                        <li>info@luxurytime.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 LUXURYTIME. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

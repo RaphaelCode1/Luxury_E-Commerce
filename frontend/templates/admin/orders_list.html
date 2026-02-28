@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Orders{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 2rem 0;">
+    <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif; margin-bottom: 2rem;">Manage Orders</h1>
+
+    <!-- Status Filter -->
+    <div style="background: #fff; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <select id="status-filter" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="paid">Paid</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+            <button onclick="filterOrders()" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div style="background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #d4af37;">
+                    <th style="text-align: left; padding: 1rem 0;">Order #</th>
+                    <th style="text-align: left; padding: 1rem 0;">Customer</th>
+                    <th style="text-align: left; padding: 1rem 0;">Items</th>
+                    <th style="text-align: left; padding: 1rem 0;">Total</th>
+                    <th style="text-align: left; padding: 1rem 0;">Status</th>
+                    <th style="text-align: left; padding: 1rem 0;">Payment</th>
+                    <th style="text-align: left; padding: 1rem 0;">Date</th>
+                    <th style="text-align: left; padding: 1rem 0;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 1rem 0;">{{ order.order_number }}</td>
+                    <td style="padding: 1rem 0;">
+                        {{ order.customer.username if order.customer else 'Guest' }}<br>
+                        <small style="color: #666;">{{ order.phone }}</small>
+                    </td>
+                    <td style="padding: 1rem 0;">{{ order.items.count() }}</td>
+                    <td style="padding: 1rem 0;">KES {{ "{:,.0f}".format(order.total_amount) }}</td>
+                    <td style="padding: 1rem 0;">
+                        <select class="status-select" data-order-id="{{ order.id }}" 
+                                style="padding: 0.3rem; border: 1px solid #ddd; border-radius: 4px;
+                                       background: {% if order.status == 'paid' %}#4CAF50{% elif order.status == 'pending' %}#ff9800{% elif order.status == 'delivered' %}#2196F3{% else %}#f44336{% endif %}; 
+                                       color: white;">
+                            <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="paid" {% if order.status == 'paid' %}selected{% endif %}>Paid</option>
+                            <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
+                            <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                            <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                            <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                        </select>
+                    </td>
+                    <td style="padding: 1rem 0;">
+                        {% if order.mpesa_receipt %}
+                        <span style="color: #4CAF50;">{{ order.mpesa_receipt }}</span>
+                        {% else %}
+                        <span style="color: #999;">Not paid</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1rem 0;">{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td style="padding: 1rem 0;">
+                        <a href="/admin/orders/{{ order.id }}" class="btn btn-secondary" style="padding: 0.3rem 0.8rem;">View</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" style="text-align: center; padding: 2rem;">No orders found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function filterOrders() {
+    const status = document.getElementById('status-filter').value;
+    window.location.href = `/admin/orders?status=${status}`;
+}
+
+// Update order status
+document.querySelectorAll('.status-select').forEach(select => {
+    select.addEventListener('change', function() {
+        const orderId = this.dataset.orderId;
+        const status = this.value;
+        
+        fetch(`/admin/orders/update-status/${orderId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: status })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Order status updated!');
+        });
+    });
+});
+</script>
+{% endblock %}

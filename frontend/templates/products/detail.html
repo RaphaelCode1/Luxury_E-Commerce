@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name if product else 'Product Details' }} - Luxury Time{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 3rem 0;">
+    {% if product %}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+        <!-- Product Images -->
+        <div>
+            <img src="{{ product.image_url or '/static/images/placeholder.jpg' }}" 
+                 alt="{{ product.name }}" 
+                 style="width: 100%; height: 500px; object-fit: cover; border-radius: 8px;">
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <img src="{{ product.image_url or '/static/images/placeholder.jpg' }}" 
+                     alt="thumbnail" 
+                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer;">
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div>
+            <div style="margin-bottom: 1rem;">
+                <span style="color: #d4af37; text-transform: uppercase; letter-spacing: 2px;">{{ product.brand }}</span>
+                <h1 style="font-size: 2.5rem; font-family: 'Playfair Display', serif; margin: 0.5rem 0;">{{ product.name }}</h1>
+            </div>
+
+            <div style="font-size: 2rem; color: #d4af37; font-weight: 700; margin-bottom: 1rem;">
+                KES {{ "{:,.0f}".format(product.price) }}
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <span style="background: #4CAF50; color: white; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                    {% if product.stock and product.stock > 0 %}In Stock{% else %}Out of Stock{% endif %}
+                </span>
+                {% if product.stock and product.stock < 5 and product.stock > 0 %}
+                <span style="color: #ff9800; margin-left: 1rem;">Only {{ product.stock }} left!</span>
+                {% endif %}
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3>Description</h3>
+                <p style="color: #666; line-height: 1.8;">{{ product.description or 'No description available.' }}</p>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3>Key Features</h3>
+                <ul style="color: #666; line-height: 2;">
+                    <li>Authentic {{ product.brand }} timepiece</li>
+                    <li>Swiss made movement</li>
+                    <li>Sapphire crystal glass</li>
+                    <li>5-year international warranty</li>
+                    <li>Comes with original box and papers</li>
+                </ul>
+            </div>
+
+            <!-- Add to Cart Section -->
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <div style="display: flex; border: 1px solid #ddd; border-radius: 4px;">
+                    <button onclick="decrementQuantity()" style="padding: 0.8rem 1.5rem; background: none; border: none; cursor: pointer;">-</button>
+                    <input type="number" id="quantity" value="1" min="1" max="{{ product.stock or 10 }}" 
+                           style="width: 60px; text-align: center; border: none; border-left: 1px solid #ddd; border-right: 1px solid #ddd; padding: 0.5rem;">
+                    <button onclick="incrementQuantity()" style="padding: 0.8rem 1.5rem; background: none; border: none; cursor: pointer;">+</button>
+                </div>
+                
+                <button onclick="addToCartWithQuantity({{ product.id }})" class="btn btn-primary" style="flex: 1;">
+                    Add to Cart
+                </button>
+            </div>
+
+            <!-- Buy Now Button -->
+            <button onclick="buyNow({{ product.id }})" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+                Buy Now
+            </button>
+        </div>
+    </div>
+    {% else %}
+    <div style="text-align: center; padding: 5rem;">
+        <h2>Product Not Found</h2>
+        <p>The product you're looking for doesn't exist.</p>
+        <a href="/" class="btn btn-primary">Continue Shopping</a>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function incrementQuantity() {
+    const input = document.getElementById('quantity');
+    const max = parseInt(input.getAttribute('max')) || 10;
+    if (parseInt(input.value) < max) {
+        input.value = parseInt(input.value) + 1;
+    }
+}
+
+function decrementQuantity() {
+    const input = document.getElementById('quantity');
+    if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
+    }
+}
+
+function addToCartWithQuantity(productId) {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    for (let i = 0; i < quantity; i++) {
+        addToCart(productId);
+    }
+    showNotification('Added to cart!', 'success');
+}
+
+function buyNow(productId) {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    for (let i = 0; i < quantity; i++) {
+        addToCart(productId);
+    }
+    window.location.href = '/cart/checkout';
+}
+</script>
+{% endblock %}
